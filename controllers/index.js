@@ -1,5 +1,1 @@
-const AuthController = require('../controllers/auth/AuthController')
-
-module.exports = {
-    AuthController,
-}
+export {default as AuthController} from "./auth/AuthController"
