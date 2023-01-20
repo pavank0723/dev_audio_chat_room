@@ -1,14 +1,14 @@
 const express = require('express')
+const router = require('./routes')
 const { APP_PORT } = require('./config')
+
 const app = express()
 
-const router = require('./routes')
+//📌Note: By default JSON in Express JS --==> ❎disable 
+app.use(express.json()) //✅ Enable
 
+//Router setup
 app.use('/api',router)
-
-app.get('/',(req,res) =>{
-    res.send('Hello from express js')
-})
 
 const port  = APP_PORT || 6000
 app.listen(port,() => console.log(`Listining on port ${port}`))
