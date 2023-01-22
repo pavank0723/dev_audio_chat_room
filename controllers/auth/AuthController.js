@@ -1,4 +1,4 @@
-const { OtpService } = require("../../services")
+const { OtpService, HashService } = require("../../services")
 
 class AuthController{
 
@@ -10,7 +10,15 @@ class AuthController{
             res.status(400).json({message:"Phone field is required! "})
         }
         const otp = await OtpService.generateOtp()
-        res.json({otp:otp})
+
+        //#region HASH
+        const ttl = 1000 * 60 *2
+        const expire = Date.now() * ttl
+        const data = `${phone}.${otp}.${expire}`
+        const hash = HashService.hashOtp(data)
+        //#endregion 
+
+        res.json({hash:hash})
     }
     //#endregion
 }

@@ -7,5 +7,6 @@ export const{
     DB_URL,
     DEBUG_MODE,
     JWT_SECRET,
+    HASH_SECRET,
     REFRESH_SECRET
 } = process.env
