@@ -20,11 +20,12 @@ class AuthController {
 
         //#region send OTP
         try {
-            await otpService.sendBySms(phone, otp)
+            // await otpService.sendBySms(phone, otp) //Original Mobile Number
             res.json(
                 {
                     hash: `${hash}.${expires}`,
                     phone,
+                    otp //dummy
                 }
             )
         } catch (error) {
@@ -67,12 +68,18 @@ class AuthController {
         }
 
         //#region Token
-        const { accessToken, refreshToken } = TokenService.generateAccessToken({_id:user._id,activated:false})
+        const { accessToken, refreshToken } = TokenService.generateAccessToken(
+            { 
+                _id: user._id, 
+                activated: false 
+            }
+        )
+        
         res.cookie('refreshToken', refreshToken, {
             maxAge: 1000 * 60 * 60 * 24 * 30,
             httpOnly: true
         })
-
+        
         res.json({ accessToken })
         //#endregion
     }

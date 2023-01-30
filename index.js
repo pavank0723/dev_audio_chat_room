@@ -1,9 +1,17 @@
 const express = require('express')
+const app = express()
+
 const mongoose = require('mongoose')
 const router = require('./routes')
 const { APP_PORT, DB_URL } = require('./config')
 
-const app = express()
+const cors = require('cors')
+
+// const corsOption = {
+//     origin:['http://localhost:3000']
+// }
+app.use(cors())
+// app.use(cors(corsOption))
 
 //📌Note: By default JSON in Express JS --==> ❎disable 
 app.use(express.json()) //✅ Enable
