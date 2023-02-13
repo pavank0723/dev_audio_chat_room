@@ -1,5 +1,6 @@
+const { UserDto } = require("../../dtos")
 const { OtpService, HashService, UserService, TokenService } = require("../../services")
-const otpService = require("../../services/otp-service")
+// const otpService = require("../../services/otp-service")
 class AuthController {
 
     //#region SEND OTP
@@ -50,7 +51,7 @@ class AuthController {
 
         const data = `${phone}.${otp}.${expires}`
 
-        const isValid = otpService.verifyOtp(hashedOtp, data)
+        const isValid = OtpService.verifyOtp(hashedOtp, data)
         if (!isValid) {
             res.status(400).json({ message: 'Invalid OTP' })
         }
@@ -79,8 +80,8 @@ class AuthController {
             maxAge: 1000 * 60 * 60 * 24 * 30,
             httpOnly: true
         })
-        
-        res.json({ accessToken })
+        const userDto = new UserDto(user)
+        res.json({ accessToken,user: userDto })
         //#endregion
     }
 }

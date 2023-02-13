@@ -7,11 +7,11 @@ const { APP_PORT, DB_URL } = require('./config')
 
 const cors = require('cors')
 
-// const corsOption = {
-//     origin:['http://localhost:3000']
-// }
-app.use(cors())
-// app.use(cors(corsOption))
+const corsOption = {
+    origin:['http://localhost:3000']
+}
+// app.use(cors())
+app.use(cors(corsOption))
 
 //📌Note: By default JSON in Express JS --==> ❎disable 
 app.use(express.json()) //✅ Enable
