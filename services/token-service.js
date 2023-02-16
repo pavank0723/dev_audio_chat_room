@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken')
 const { JWT_SECRET, JWT_REFRESH_SECRET } = require('../config')
+const { RefreshModel } = require('../models')
 
 class TokenService {
     generateAccessToken(payload) {
@@ -15,7 +16,18 @@ class TokenService {
             accessToken, refreshToken
         }
     }
-    
+
+    async stroreRefreshToken(token, userId) {
+        try {
+            await RefreshModel.create({
+                token,
+                userId
+            })
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
 }
 
 module.exports = new TokenService()

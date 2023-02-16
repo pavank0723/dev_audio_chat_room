@@ -8,6 +8,7 @@ const { APP_PORT, DB_URL } = require('./config')
 const cors = require('cors')
 
 const corsOption = {
+    credentials:true,
     origin:['http://localhost:3000']
 }
 // app.use(cors())

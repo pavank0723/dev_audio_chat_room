@@ -70,18 +70,25 @@ class AuthController {
 
         //#region Token
         const { accessToken, refreshToken } = TokenService.generateAccessToken(
-            { 
-                _id: user._id, 
-                activated: false 
+            {
+                _id: user._id,
+                activated: false
             }
         )
-        
+        // #region Store tokens in Database and Cookie
+        await TokenService.stroreRefreshToken(refreshToken, user._id)
         res.cookie('refreshToken', refreshToken, {
             maxAge: 1000 * 60 * 60 * 24 * 30,
             httpOnly: true
         })
+
+        res.cookie('accessToken', accessToken, {
+            maxAge: 1000 * 60 * 60 * 24 * 30,
+            httpOnly: true
+        })
+        // #endregion
         const userDto = new UserDto(user)
-        res.json({ accessToken,user: userDto })
+        res.json({ user: userDto, auth: true })
         //#endregion
     }
 }
