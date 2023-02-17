@@ -4,7 +4,7 @@ dotenv.config()
 export const{
     APP_NAME,
     APP_PORT,
-    APP_URL,
+    BASE_URL,
     DB_URL,
     DEBUG_MODE,
     JWT_SECRET,

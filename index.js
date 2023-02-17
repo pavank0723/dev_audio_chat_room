@@ -6,16 +6,23 @@ const router = require('./routes')
 const { APP_PORT, DB_URL } = require('./config')
 
 const cors = require('cors')
+const cookieParser = require('cookie-parser')
 
 const corsOption = {
     credentials:true,
     origin:['http://localhost:3000']
 }
+app.use(cookieParser())
+
+//Access the image 
+app.use('/storage',express.static('storage'))
+
+//Frontend cross platform access
 // app.use(cors())
 app.use(cors(corsOption))
 
 //📌Note: By default JSON in Express JS --==> ❎disable 
-app.use(express.json()) //✅ Enable
+app.use(express.json({limit:"5mb"})) //✅ Enable
 
 
 //#region 🔗DB Connection 

@@ -91,6 +91,9 @@ class AuthController {
         res.json({ user: userDto, auth: true })
         //#endregion
     }
+
+
+    
 }
 
 module.exports = new AuthController()
