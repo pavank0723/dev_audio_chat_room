@@ -5,7 +5,7 @@ const { RefreshModel } = require('../models')
 class TokenService {
     generateAccessToken(payload) {
         const accessToken = jwt.sign(payload, JWT_SECRET, {
-            expiresIn: '1h'
+            expiresIn: '1m'
         })
 
         const refreshToken = jwt.sign(payload, JWT_REFRESH_SECRET, {
@@ -30,6 +30,21 @@ class TokenService {
 
     async verifyAccessToken(token){
         return jwt.verify(token,JWT_SECRET)
+    }
+    async verifyRefreshToken(refreshToken){
+        return jwt.verify(refreshToken,JWT_REFRESH_SECRET)
+    }
+    async findRefreshToken(userId,refreshToken){
+        return await RefreshModel.findOne({
+            userId:userId,
+            token:refreshToken
+        })
+    }
+    async updateRefreshToken(userId,refreshToken){
+        return await RefreshModel.updateOne({userId},{token:refreshToken})
+    }
+    async removeToken(refreshToken){
+        return await RefreshModel.deleteOne({token:refreshToken})
     }
 }
 
