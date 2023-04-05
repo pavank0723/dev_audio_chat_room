@@ -38,6 +38,7 @@ class AuthController {
     }
     //#endregion
 
+    //#region VERIFY OTP
     async verifyOtp(req, res) {
         const { otp, hash, phone } = req.body
         if (!otp || !hash || !phone) {
@@ -92,8 +93,10 @@ class AuthController {
         res.json({ user: userDto, auth: true })
         //#endregion
     }
+    //#endregion
 
 
+    //#region REFRESH TOKEN
     async refresh(req, res) {
         //Refresh Token from cookies
         const { refreshToken: refreshTokenFromCookie } = req.cookies
@@ -108,7 +111,10 @@ class AuthController {
 
         //Check If token is in DB
         try {
-            const token = await TokenService.findRefreshToken(userData._id, refreshTokenFromCookie)
+            const token = await TokenService.findRefreshToken(
+                userData._id, 
+                refreshTokenFromCookie
+            )
             if(!token){
                 return res.status(401).json({ message: "Invalid token" })
             }
@@ -147,6 +153,7 @@ class AuthController {
         const userDto = new UserDto(user)
         res.json({ user: userDto, auth: true })
     }
+    //#endregion
 
     async logout(req,res){
         const {refreshToken} = req.cookies

@@ -24,27 +24,30 @@ class TokenService {
                 userId
             })
         } catch (error) {
-            console.log(error)
+            console.log(error.message)
         }
     }
 
-    async verifyAccessToken(token){
-        return jwt.verify(token,JWT_SECRET)
+    async verifyAccessToken(token) {
+        return jwt.verify(token, JWT_SECRET)
     }
-    async verifyRefreshToken(refreshToken){
-        return jwt.verify(refreshToken,JWT_REFRESH_SECRET)
+    async verifyRefreshToken(refreshToken) {
+        return jwt.verify(refreshToken, JWT_REFRESH_SECRET)
     }
-    async findRefreshToken(userId,refreshToken){
+    async findRefreshToken(userId, refreshToken) {
         return await RefreshModel.findOne({
-            userId:userId,
-            token:refreshToken
+            userId: userId,
+            token: refreshToken
         })
     }
-    async updateRefreshToken(userId,refreshToken){
-        return await RefreshModel.updateOne({userId},{token:refreshToken})
+    async updateRefreshToken(userId, refreshToken) {
+        return await RefreshModel.updateOne(
+            { userId:userId }, 
+            { token: refreshToken }
+        )
     }
-    async removeToken(refreshToken){
-        return await RefreshModel.deleteOne({token:refreshToken})
+    async removeToken(refreshToken) {
+        return await RefreshModel.deleteOne({ token: refreshToken })
     }
 }
 
