@@ -26,8 +26,8 @@ class AuthController {
                 {
                     hash: `${hash}.${expires}`,
                     phone,
-                    otp //dummy
-                }
+                    otp,
+                }//dummy
             )
         } catch (error) {
             console.log(error)
@@ -70,7 +70,7 @@ class AuthController {
         }
 
         //#region Token
-        const { accessToken, refreshToken } = TokenService.generateAccessToken(
+        const { accessToken, refreshToken } = TokenService.generateToken(
             {
                 _id: user._id,
                 activated: false
@@ -80,7 +80,7 @@ class AuthController {
         await TokenService.stroreRefreshToken(refreshToken, user._id)
         
         res.cookie('refreshToken', refreshToken, {
-            maxAge: 1000 * 60 * 60 * 24 * 30,
+            maxAge: 1000 * 60 * 60 * 24 * 30,  //ms * m * h * 1D * 30D
             httpOnly: true
         })
 
@@ -123,13 +123,13 @@ class AuthController {
         }
 
         //Check if valid user
-        const user = UserService.findUser({_id:userData._id})
+        const user = await UserService.findUser({_id:userData._id})
         if(!user){
             return res.status(404).json({ message: "No User found" })
         }
 
         //Generate new token
-        const {refreshToken,accessToken} = TokenService.generateAccessToken({_id:userData._id,})
+        const {refreshToken,accessToken} = TokenService.generateToken({_id:userData._id})
 
         //Update Refresh Token
         try {

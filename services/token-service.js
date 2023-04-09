@@ -1,10 +1,10 @@
 const jwt = require('jsonwebtoken')
-const { JWT_SECRET, JWT_REFRESH_SECRET } = require('../config')
+const { JWT_ACCESS_SECRET, JWT_REFRESH_SECRET } = require('../config')
 const { RefreshModel } = require('../models')
 
 class TokenService {
-    generateAccessToken(payload) {
-        const accessToken = jwt.sign(payload, JWT_SECRET, {
+    generateToken(payload) {
+        const accessToken = jwt.sign(payload, JWT_ACCESS_SECRET, {
             expiresIn: '1m'
         })
 
@@ -29,7 +29,7 @@ class TokenService {
     }
 
     async verifyAccessToken(token) {
-        return jwt.verify(token, JWT_SECRET)
+        return jwt.verify(token, JWT_ACCESS_SECRET)
     }
     async verifyRefreshToken(refreshToken) {
         return jwt.verify(refreshToken, JWT_REFRESH_SECRET)

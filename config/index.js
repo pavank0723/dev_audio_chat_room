@@ -7,7 +7,7 @@ export const{
     BASE_URL,
     DB_URL,
     DEBUG_MODE,
-    JWT_SECRET,
+    JWT_ACCESS_SECRET,
     JWT_REFRESH_SECRET,
     HASH_SECRET,
     SECRET,
