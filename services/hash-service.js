@@ -1,10 +1,12 @@
-const crypto = require('crypto')
-const { HASH_SECRET } = require('../config')
+const crypto = require('crypto');
+
 class HashService {
-    //Genreate Hash of OTP
     hashOtp(data) {
-       return crypto.createHmac('sha256', HASH_SECRET).update(data).digest('hex')
+        return crypto
+            .createHmac('sha256', process.env.HASH_SECRET)
+            .update(data)
+            .digest('hex');
     }
 }
 
-module.exports = new HashService()
+module.exports = new HashService();

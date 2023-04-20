@@ -1,54 +1,54 @@
-const jwt = require('jsonwebtoken')
-const { JWT_ACCESS_SECRET, JWT_REFRESH_SECRET } = require('../config')
-const { RefreshModel } = require('../models')
-
+const jwt = require('jsonwebtoken');
+const accessTokenSecret = process.env.JWT_ACCESS_TOKEN_SECRET;
+const refreshTokenSecret = process.env.JWT_REFRESH_TOKEN_SECRET;
+const refreshModel = require('../models/refresh-model');
 class TokenService {
-    generateToken(payload) {
-        const accessToken = jwt.sign(payload, JWT_ACCESS_SECRET, {
-            expiresIn: '1m'
-        })
-
-        const refreshToken = jwt.sign(payload, JWT_REFRESH_SECRET, {
-            expiresIn: '1y'
-        })
-
-        return {
-            accessToken, refreshToken
-        }
+    generateTokens(payload) {
+        const accessToken = jwt.sign(payload, accessTokenSecret, {
+            expiresIn: '1m',
+        });
+        const refreshToken = jwt.sign(payload, refreshTokenSecret, {
+            expiresIn: '1y',
+        });
+        return { accessToken, refreshToken };
     }
 
-    async stroreRefreshToken(token, userId) {
+    async storeRefreshToken(token, userId) {
         try {
-            await RefreshModel.create({
+            await refreshModel.create({
                 token,
-                userId
-            })
-        } catch (error) {
-            console.log(error.message)
+                userId,
+            });
+        } catch (err) {
+            console.log(err.message);
         }
     }
 
     async verifyAccessToken(token) {
-        return jwt.verify(token, JWT_ACCESS_SECRET)
+        return jwt.verify(token, accessTokenSecret);
     }
+
     async verifyRefreshToken(refreshToken) {
-        return jwt.verify(refreshToken, JWT_REFRESH_SECRET)
+        return jwt.verify(refreshToken, refreshTokenSecret);
     }
+
     async findRefreshToken(userId, refreshToken) {
-        return await RefreshModel.findOne({
+        return await refreshModel.findOne({
             userId: userId,
-            token: refreshToken
-        })
+            token: refreshToken,
+        });
     }
+
     async updateRefreshToken(userId, refreshToken) {
-        return await RefreshModel.updateOne(
-            { userId:userId }, 
+        return await refreshModel.updateOne(
+            { userId: userId },
             { token: refreshToken }
-        )
+        );
     }
+
     async removeToken(refreshToken) {
-        return await RefreshModel.deleteOne({ token: refreshToken })
+        return await refreshModel.deleteOne({ token: refreshToken });
     }
 }
 
-module.exports = new TokenService()
+module.exports = new TokenService();

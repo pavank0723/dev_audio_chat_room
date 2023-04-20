@@ -1,36 +1,26 @@
-const mongoose = require('mongoose')
-const { BASE_URL } = require('../config')
-const Schema = mongoose.Schema
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-const userSchema = new Schema({
-    name: {
-        type: String,
-        required: false
+const userSchema = new Schema(
+    {
+        phone: { type: String, required: true },
+        name: { type: String, required: false },
+        avatar: {
+            type: String,
+            required: false,
+            get: (avatar) => {
+                if (avatar) {
+                    return `${process.env.BASE_URL}${avatar}`;
+                }
+                return avatar;
+            },
+        },
+        activated: { type: Boolean, required: false, default: false },
     },
-    avatar: {
-        type: String,
-        required: false,
-        get: (avatar) => {
-            if (avatar) {
-                return `${BASE_URL}${avatar}`
-            } else {
-                return avatar
-            }
-
-        }
-    },
-    phone: {
-        type: String,
-        required: true
-    },
-    activated: {
-        type: Boolean,
-        required: false,
-        default: false
+    {
+        timestamps: true,
+        toJSON: { getters: true },
     }
-}, {
-    timestamps: true,
-    toJSON: { getters: true }
-})
+);
 
-module.exports = mongoose.model('User', userSchema, 'users')
+module.exports = mongoose.model('User', userSchema, 'users');

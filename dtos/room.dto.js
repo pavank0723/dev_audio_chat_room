@@ -1,4 +1,3 @@
-const { BASE_URL } = require('../config')
 class RoomDto {
     id;
     topic;
@@ -11,10 +10,9 @@ class RoomDto {
         this.id = room._id;
         this.topic = room.topic;
         this.roomType = room.roomType;
-        this.speakers = room.speakers;
         this.ownerId = room.ownerId;
+        this.speakers = room.speakers;
         this.createdAt = room.createdAt;
     }
 }
-
 module.exports = RoomDto;

@@ -1,66 +1,41 @@
-const express = require('express')
-const app = express()
+require('dotenv').config();
+const express = require('express');
+const app = express();
+const DbConnect = require('./database');
+const router = require('./routes');
+const cors = require('cors');
+const cookieParser = require('cookie-parser');
+const ACTIONS = require('./actions');
 
-const mongoose = require('mongoose')
-const router = require('./routes')
-const { APP_PORT, DB_URL } = require('./config')
-
-const cors = require('cors')
-const cookieParser = require('cookie-parser')
-const ACTIONS = require('./actions')
-
-//#region Socket 
-const server = require('http').createServer(app)
+const server = require('http').createServer(app);
 
 const io = require('socket.io')(server, {
     cors: {
         origin: 'http://localhost:3000',
-        methods: ['GET', 'POST']
-    }
-})
-//#endregion 
+        methods: ['GET', 'POST'],
+    },
+});
 
-app.use(cookieParser())
+app.use(cookieParser());
 const corsOption = {
     credentials: true,
-    origin: ['http://localhost:3000']
-}
+    origin: ['http://localhost:3000'],
+};
+app.use(cors(corsOption));
+app.use('/storage', express.static('storage'));
 
+const PORT = process.env.PORT || 5500;
+DbConnect();
+app.use(express.json({ limit: '8mb' }));
+app.use(router);
 
-//Frontend cross platform access
-// app.use(cors())
-app.use(cors(corsOption))
+app.get('/', (req, res) => {
+    res.send('Hello from express Js');
+});
 
-//Access the image 
-app.use('/storage', express.static('storage'))
+// Sockets
 
-
-//📌Note: By default JSON in Express JS --==> ❎disable 
-app.use(express.json({ limit: "5mb" })) //✅ Enable
-
-
-//#region 🔗DB Connection 
-mongoose.connect(DB_URL)
-
-const db = mongoose.connection
-
-db.on('error', console.error.bind(console, 'connection error: '))
-db.once('open', () => {
-    console.log('DB connected...')
-})
-//#endregion
-
-
-//Router setup
-app.use('/api', router)
-
-const port = APP_PORT || 6000
-
-//#region Socket Logic
-
-const socketUserMapping = {
-
-}
+const socketUserMapping = {};
 
 io.on('connection', (socket) => {
     console.log('new connection', socket.id);
@@ -135,6 +110,4 @@ io.on('connection', (socket) => {
     socket.on('disconnecting', leaveRoom);
 });
 
-
-//#endregion
-server.listen(port, () => console.log(`Listining on port ${port}`))
+server.listen(PORT, () => console.log(`Listening on port ${PORT}`));
